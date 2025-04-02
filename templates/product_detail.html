@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} - Crispy Chips{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-6">
+        {% if product.image_url %}
+            <img src="{{ product.image_url }}" class="img-fluid rounded product-detail-image" alt="{{ product.name }}">
+        {% else %}
+            <img src="https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" class="img-fluid rounded product-detail-image" alt="{{ product.name }}">
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h1>{{ product.name }}</h1>
+        <p class="badge bg-secondary">{{ product.category }}</p>
+        <p class="lead">{{ product.description }}</p>
+        <h3 class="text-primary mb-4">${{ "%.2f"|format(product.price) }}</h3>
+        
+        <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post" class="mb-4">
+            <div class="input-group mb-3" style="max-width: 200px;">
+                <span class="input-group-text">Quantity</span>
+                <input type="number" name="quantity" value="1" min="1" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+            </button>
+        </form>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Product Details</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>Category:</th>
+                        <td>{{ product.category }}</td>
+                    </tr>
+                    <tr>
+                        <th>Product ID:</th>
+                        <td>{{ product.id }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <h3>You might also like</h3>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        <!-- This would be populated with related products in a real application -->
+    </div>
+</div>
+{% endblock %}

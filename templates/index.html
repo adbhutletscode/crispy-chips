@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}Crispy Chips - Premium Potato Chips{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Crunch Into Perfection</h1>
+        <p class="hero-subtitle">Discover our artisanal potato chips made with the finest ingredients and crafted to perfection.</p>
+        <a href="#products" class="btn btn-warning hero-button">Shop Now</a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="container mb-5">
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="p-4 bg-white rounded-3 shadow-sm h-100">
+                <i class="fas fa-leaf fa-3x mb-3 text-success"></i>
+                <h3>Premium Ingredients</h3>
+                <p class="text-muted">We use only the finest potatoes and natural seasonings for an authentic taste experience.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="p-4 bg-white rounded-3 shadow-sm h-100">
+                <i class="fas fa-shipping-fast fa-3x mb-3 text-primary"></i>
+                <h3>Fast Delivery</h3>
+                <p class="text-muted">Enjoy free shipping on all orders and get your favorite chips delivered to your doorstep.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="p-4 bg-white rounded-3 shadow-sm h-100">
+                <i class="fas fa-medal fa-3x mb-3 text-warning"></i>
+                <h3>Quality Guaranteed</h3>
+                <p class="text-muted">Our chips are made in small batches to ensure the highest quality and freshness.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="container mb-5">
+    <h2 class="section-title">Featured Flavors</h2>
+    <div class="row">
+        {% for product in products[:3] %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 featured-card">
+                <div class="position-absolute top-0 end-0 m-3">
+                    <span class="badge bg-warning text-dark">Featured</span>
+                </div>
+                {% if product.image_url %}
+                    <img src="{{ product.image_url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" class="card-img-top product-image" alt="{{ product.name }}">
+                {% endif %}
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description[:80] + '...' if product.description|length > 80 else product.description }}</p>
+                    <span class="price mb-3 d-block">${{ "%.2f"|format(product.price) }}</span>
+                    <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-outline-warning btn-sm">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- All Products Section -->
+<section class="container" id="products">
+    <h2 class="section-title">Our Products</h2>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for product in products %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="position-relative">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" class="card-img-top product-image" alt="{{ product.name }}">
+                    {% endif %}
+                    <span class="badge bg-{{ 'primary' if product.category == 'Regular' else 'success' if product.category == 'Organic' else 'danger' if product.category == 'Spicy' else 'info' }} position-absolute top-0 start-0 m-3">{{ product.category }}</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text text-truncate">{{ product.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="price">${{ "%.2f"|format(product.price) }}</span>
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post" class="d-flex">
+                        <input type="number" name="quantity" value="1" min="1" class="form-control me-2" style="width: 70px;">
+                        <button type="submit" class="btn btn-warning flex-grow-1">
+                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="container my-5 py-5">
+    <h2 class="section-title">What Our Customers Say</h2>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="card-text">"These are the best chips I've ever tasted! The flavors are so authentic and the crunch is perfect. I'm a customer for life!"</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <div class="flex-shrink-0">
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <span class="text-white fw-bold">JD</span>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">John Doe</h6>
+                            <small class="text-muted">Chip Enthusiast</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="card-text">"I love the variety of flavors! The spicy ones are my favorite. Great quality and always fresh. Highly recommend!"</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <div class="flex-shrink-0">
+                            <div class="bg-success rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <span class="text-white fw-bold">JS</span>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">Jane Smith</h6>
+                            <small class="text-muted">Food Blogger</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star-half-alt text-warning"></i>
+                    </div>
+                    <p class="card-text">"The organic chips are amazing! I appreciate that they use quality ingredients. My kids love them too. Will order again!"</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <div class="flex-shrink-0">
+                            <div class="bg-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <span class="text-white fw-bold">RJ</span>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">Robert Johnson</h6>
+                            <small class="text-muted">Health Enthusiast</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="container-fluid bg-light py-5 mb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h2 class="mb-4">Join Our Crispy Community</h2>
+                <p class="mb-4">Subscribe to our newsletter for exclusive offers, new flavor announcements, and crispy content!</p>
+                <form class="row g-3 justify-content-center">
+                    <div class="col-md-8">
+                        <input type="email" class="form-control form-control-lg" placeholder="Your email address">
+                    </div>
+                    <div class="col-md-auto">
+                        <button type="submit" class="btn btn-warning btn-lg">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add smooth scrolling for the "Shop Now" button
+    document.addEventListener('DOMContentLoaded', function() {
+        const shopNowBtn = document.querySelector('.hero-button');
+        shopNowBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const productsSection = document.querySelector('#products');
+            window.scrollTo({
+                top: productsSection.offsetTop - 100,
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+{% endblock %}

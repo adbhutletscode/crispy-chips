@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Shopping Cart - Crispy Chips{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Shopping Cart</h1>
+
+{% if cart_items %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            {% if item.product.image_url %}
+                                <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="cart-item-image me-3">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="{{ item.product.name }}" class="cart-item-image me-3">
+                            {% endif %}
+                            <div>
+                                <h5 class="mb-0">{{ item.product.name }}</h5>
+                                <span class="badge bg-secondary">{{ item.product.category }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${{ "%.2f"|format(item.product.price) }}</td>
+                    <td>
+                        <form action="{{ url_for('update_cart') }}" method="post" class="d-flex align-items-center">
+                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control" style="width: 70px;">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary ms-2">Update</button>
+                        </form>
+                    </td>
+                    <td>${{ "%.2f"|format(item.total) }}</td>
+                    <td>
+                        <a href="{{ url_for('remove_from_cart', product_id=item.product.id) }}" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i> Remove
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="table-light">
+                    <th colspan="3" class="text-end">Total:</th>
+                    <th>${{ "%.2f"|format(total) }}</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Continue Shopping
+        </a>
+        <a href="{{ url_for('checkout') }}" class="btn btn-success">
+            <i class="fas fa-credit-card"></i> Proceed to Checkout
+        </a>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <h4 class="alert-heading">Your cart is empty!</h4>
+        <p>Looks like you haven't added any products to your cart yet.</p>
+        <hr>
+        <a href="{{ url_for('index') }}" class="btn btn-primary">
+            <i class="fas fa-shopping-bag"></i> Browse Products
+        </a>
+    </div>
+{% endif %}
+{% endblock %}
