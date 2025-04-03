@@ -1,0 +1,55 @@
+[
+    {
+        "id": "1",
+        "name": "Classic Salted Chips",
+        "description": "Our signature classic salted potato chips, perfectly crispy and lightly salted for that traditional flavor everyone loves.",
+        "price": 2.99,
+        "image": "classic_salted.jpg",
+        "category": "Regular",
+        "image_url": "https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+    },
+    {
+        "id": "2",
+        "name": "Sour Cream & Onion",
+        "description": "The perfect blend of tangy sour cream and savory onion flavors on our crispy potato chips.",
+        "price": 3.49,
+        "image": "sour_cream_onion.jpg",
+        "category": "Flavored",
+        "image_url": "https://images.unsplash.com/photo-1621607512214-68297480165e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+    },
+    {
+        "id": "3",
+        "name": "Spicy Jalape\u00c3\u00b1o",
+        "description": "Crispy chips with a kick! Our jalape\u00c3\u00b1o flavored chips deliver the perfect amount of heat in every bite.",
+        "price": 3.49,
+        "image": "spicy_jalapeno.jpg",
+        "category": "Spicy",
+        "image_url": "https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+    },
+    {
+        "id": "4",
+        "name": "BBQ Crunch",
+        "description": "Smoky, sweet, and tangy BBQ flavor on our extra crunchy potato chips. A backyard barbecue in every bite!",
+        "price": 3.29,
+        "image": "bbq_crunch.jpg",
+        "category": "Flavored",
+        "image_url": "https://images.unsplash.com/photo-1621607512214-68297480165e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+    },
+    {
+        "id": "5",
+        "name": "Sea Salt & Vinegar",
+        "description": "The perfect balance of tangy vinegar and sea salt on our crispy potato chips. A classic flavor combination!",
+        "price": 3.29,
+        "image": "salt_vinegar.jpg",
+        "category": "Flavored",
+        "image_url": "https://images.unsplash.com/photo-1621607512214-68297480165e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+    },
+    {
+        "id": "f4495cda-de5e-42ab-9711-006977ccba83",
+        "name": "cake",
+        "description": "asd",
+        "price": 50.0,
+        "image": "3aa85ae2dadf4c2f87183d158a80339f_AdobeStock_1155302673_Preview.png",
+        "category": "Regular"
+    }
+]
