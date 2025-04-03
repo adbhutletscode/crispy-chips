@@ -1,0 +1,887 @@
+{% extends 'base.html' %}
+
+{% block title %}FoodExpress - Home{% endblock %}
+
+{% block content %}
+<div class="hero-section mb-5">
+    <div class="hero-content text-center py-5">
+        <h1 class="display-4 fw-bold text-shadow">Delicious Food Delivered to Your Door</h1>
+        <p class="lead text-shadow">Order from your favorite restaurants with just a few clicks</p>
+        <form action="{{ url_for('search') }}" method="get" class="search-form mt-4">
+            <div class="input-group input-group-lg mx-auto" style="max-width: 600px;">
+                <input type="text" class="form-control" name="query" placeholder="Search for food or restaurants">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search me-2"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<section class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title">Popular Restaurants</h2>
+        <a href="{{ url_for('search') }}" class="btn btn-outline-primary btn-sm">View All <i class="fas fa-arrow-right ms-1"></i></a>
+    </div>
+
+    {% if restaurants %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for restaurant in restaurants %}
+                <div class="col">
+                    <div class="card h-100 restaurant-card shadow-sm">
+                        <div class="restaurant-image-container">
+                            {% if restaurant.id == 'rest-001' %}
+                                <img src="{{ url_for('static', filename='uploads/restaurants/spice_garden.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}">
+                            {% elif restaurant.id == 'rest-002' %}
+                                <img src="{{ url_for('static', filename='uploads/restaurants/burger_bliss.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}">
+                            {% elif restaurant.id == 'rest-003' %}
+                                <img src="{{ url_for('static', filename='uploads/restaurants/pasta_paradise.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}">
+                            {% elif restaurant.id == 'rest-004' %}
+                                <img src="{{ url_for('static', filename='uploads/restaurants/sushi_sensation.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}">
+                            {% elif restaurant.id == 'rest-005' %}
+                                <img src="{{ url_for('static', filename='uploads/restaurants/taco_fiesta.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}">
+                            {% elif restaurant.id == 'rest-006' %}
+                                <img src="{{ url_for('static', filename='uploads/restaurants/green_bowl.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='img/default-restaurant.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}">
+                            {% endif %}
+                            <div class="restaurant-badge">
+                                <span class="badge rounded-pill bg-light text-dark shadow-sm">
+                                    <i class="fas fa-clock text-primary me-1"></i> 30-45 min
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="card-title">{{ restaurant.name }}</h5>
+                                <span class="badge bg-warning text-dark">
+                                    <i class="fas fa-star"></i> {{ restaurant.rating|default('New') }}
+                                </span>
+                            </div>
+                            <p class="card-text text-muted small mb-2">
+                                <i class="fas fa-utensils me-1"></i> {{ restaurant.cuisines|join(', ') }}
+                            </p>
+                            <p class="card-text small mb-3">{{ restaurant.description|truncate(80) }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small">
+                                    <i class="fas fa-motorcycle me-1"></i> Delivery fee: ${{ restaurant.delivery_fee }}
+                                </span>
+                                <span class="text-muted small">
+                                    <i class="fas fa-shopping-basket me-1"></i> Min: ${{ restaurant.min_order }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.id) }}" class="btn btn-outline-primary w-100">View Menu</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <p class="mb-0">No restaurants available yet. Check back soon!</p>
+        </div>
+    {% endif %}
+</section>
+
+<section class="mb-5 py-4 bg-light rounded">
+    <div class="container">
+        <h2 class="section-title mb-4">Explore by Cuisine</h2>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
+            <div class="col">
+                <a href="{{ url_for('search', query='pizza') }}" class="text-decoration-none">
+                    <div class="card cuisine-card text-center h-100 shadow-sm">
+                        <div class="card-body">
+                            <i class="fas fa-pizza-slice cuisine-icon"></i>
+                            <h5 class="card-title mt-2">Pizza</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{{ url_for('search', query='burger') }}" class="text-decoration-none">
+                    <div class="card cuisine-card text-center h-100 shadow-sm">
+                        <div class="card-body">
+                            <i class="fas fa-hamburger cuisine-icon"></i>
+                            <h5 class="card-title mt-2">Burgers</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{{ url_for('search', query='sushi') }}" class="text-decoration-none">
+                    <div class="card cuisine-card text-center h-100 shadow-sm">
+                        <div class="card-body">
+                            <i class="fas fa-fish cuisine-icon"></i>
+                            <h5 class="card-title mt-2">Sushi</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{{ url_for('search', query='indian') }}" class="text-decoration-none">
+                    <div class="card cuisine-card text-center h-100 shadow-sm">
+                        <div class="card-body">
+                            <i class="fas fa-pepper-hot cuisine-icon"></i>
+                            <h5 class="card-title mt-2">Indian</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{{ url_for('search', query='chinese') }}" class="text-decoration-none">
+                    <div class="card cuisine-card text-center h-100 shadow-sm">
+                        <div class="card-body">
+                            <i class="fas fa-utensils cuisine-icon"></i>
+                            <h5 class="card-title mt-2">Chinese</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{{ url_for('search', query='dessert') }}" class="text-decoration-none">
+                    <div class="card cuisine-card text-center h-100 shadow-sm">
+                        <div class="card-body">
+                            <i class="fas fa-ice-cream cuisine-icon"></i>
+                            <h5 class="card-title mt-2">Desserts</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <h2 class="section-title mb-4">Featured Dishes</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        <div class="col animate-on-scroll" data-animation="animate__fadeInUp">
+            <div class="card dish-card shadow-sm h-100">
+                <div class="position-relative overflow-hidden">
+                    <div class="dish-image-container">
+                        <div class="dish-image-placeholder indian"></div>
+                    </div>
+                    <div class="position-absolute top-0 start-0 m-2">
+                        <span class="badge bg-success">Bestseller</span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle quick-view-btn" data-bs-toggle="modal" data-bs-target="#dishModal1">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <div class="position-absolute bottom-0 start-0 w-100 p-2" style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-white">Spice Garden</span>
+                            <span class="badge bg-light text-dark"><i class="fas fa-star text-warning me-1"></i>4.8</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title mb-1">Butter Chicken</h5>
+                    <p class="card-text text-muted small mb-3">Tender chicken pieces in a rich and creamy tomato-based sauce.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">$14.99</span>
+                        <div>
+                            <form action="{{ url_for('add_to_cart') }}" method="post" class="d-inline">
+                                <input type="hidden" name="item_id" value="item-001">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-sm btn-primary me-1 add-to-cart-btn" data-item-id="item-001">
+                                    <i class="fas fa-cart-plus me-1"></i>Add
+                                </button>
+                            </form>
+                            <a href="{{ url_for('restaurant_detail', restaurant_id='rest-001') }}" class="btn btn-sm btn-outline-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col animate-on-scroll" data-animation="animate__fadeInUp" data-delay="100">
+            <div class="card dish-card shadow-sm h-100">
+                <div class="position-relative overflow-hidden">
+                    <div class="dish-image-container">
+                        <div class="dish-image-placeholder burger"></div>
+                    </div>
+                    <div class="position-absolute top-0 start-0 m-2">
+                        <span class="badge bg-danger">Hot</span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle quick-view-btn" data-bs-toggle="modal" data-bs-target="#dishModal2">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <div class="position-absolute bottom-0 start-0 w-100 p-2" style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-white">Burger Bliss</span>
+                            <span class="badge bg-light text-dark"><i class="fas fa-star text-warning me-1"></i>4.7</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title mb-1">Bliss Burger</h5>
+                    <p class="card-text text-muted small mb-3">Angus beef with caramelized onions and blue cheese on a brioche bun.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">$13.99</span>
+                        <div>
+                            <form action="{{ url_for('add_to_cart') }}" method="post" class="d-inline">
+                                <input type="hidden" name="item_id" value="item-007">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-sm btn-primary me-1 add-to-cart-btn" data-item-id="item-007">
+                                    <i class="fas fa-cart-plus me-1"></i>Add
+                                </button>
+                            </form>
+                            <a href="{{ url_for('restaurant_detail', restaurant_id='rest-002') }}" class="btn btn-sm btn-outline-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col animate-on-scroll" data-animation="animate__fadeInUp" data-delay="200">
+            <div class="card dish-card shadow-sm h-100">
+                <div class="position-relative overflow-hidden">
+                    <div class="dish-image-container">
+                        <div class="dish-image-placeholder pizza"></div>
+                    </div>
+                    <div class="position-absolute top-0 start-0 m-2">
+                        <span class="badge bg-info text-dark">Veg</span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle quick-view-btn" data-bs-toggle="modal" data-bs-target="#dishModal3">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <div class="position-absolute bottom-0 start-0 w-100 p-2" style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-white">Pasta Paradise</span>
+                            <span class="badge bg-light text-dark"><i class="fas fa-star text-warning me-1"></i>4.6</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title mb-1">Margherita Pizza</h5>
+                    <p class="card-text text-muted small mb-3">Traditional pizza with tomato sauce, fresh mozzarella and basil.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">$12.99</span>
+                        <div>
+                            <form action="{{ url_for('add_to_cart') }}" method="post" class="d-inline">
+                                <input type="hidden" name="item_id" value="item-013">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-sm btn-primary me-1 add-to-cart-btn" data-item-id="item-013">
+                                    <i class="fas fa-cart-plus me-1"></i>Add
+                                </button>
+                            </form>
+                            <a href="{{ url_for('restaurant_detail', restaurant_id='rest-003') }}" class="btn btn-sm btn-outline-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col animate-on-scroll" data-animation="animate__fadeInUp" data-delay="300">
+            <div class="card dish-card shadow-sm h-100">
+                <div class="position-relative overflow-hidden">
+                    <div class="dish-image-container">
+                        <div class="dish-image-placeholder sushi"></div>
+                    </div>
+                    <div class="position-absolute top-0 start-0 m-2">
+                        <span class="badge bg-primary">Popular</span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle quick-view-btn" data-bs-toggle="modal" data-bs-target="#dishModal4">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <div class="position-absolute bottom-0 start-0 w-100 p-2" style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-white">Sushi Sensation</span>
+                            <span class="badge bg-light text-dark"><i class="fas fa-star text-warning me-1"></i>4.5</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title mb-1">California Roll</h5>
+                    <p class="card-text text-muted small mb-3">Crab, avocado, and cucumber roll topped with tobiko. 8 pieces.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">$8.99</span>
+                        <div>
+                            <form action="{{ url_for('add_to_cart') }}" method="post" class="d-inline">
+                                <input type="hidden" name="item_id" value="item-016">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-sm btn-primary me-1 add-to-cart-btn" data-item-id="item-016">
+                                    <i class="fas fa-cart-plus me-1"></i>Add
+                                </button>
+                            </form>
+                            <a href="{{ url_for('restaurant_detail', restaurant_id='rest-004') }}" class="btn btn-sm btn-outline-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5 py-4">
+    <div class="row">
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="card h-100 bg-primary text-white shadow">
+                <div class="card-body p-4">
+                    <h3 class="card-title">Are you a restaurant owner?</h3>
+                    <p class="card-text">Partner with us to reach more customers and grow your business. Easy onboarding, flexible options, and dedicated support.</p>
+                    <a href="{{ url_for('register') }}" class="btn btn-light">Join as Partner</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 bg-dark text-white shadow">
+                <div class="card-body p-4">
+                    <h3 class="card-title">Download our mobile app</h3>
+                    <p class="card-text">Get the best food delivery experience with our mobile app. Order tracking, exclusive offers, and more.</p>
+                    <div class="d-flex">
+                        <a href="#" class="me-2">
+                            <img src="https://via.placeholder.com/120x40" alt="App Store" class="app-badge">
+                        </a>
+                        <a href="#">
+                            <img src="https://via.placeholder.com/120x40" alt="Google Play" class="app-badge">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3>How FoodExpress Works</h3>
+                    <div class="row mt-4">
+                        <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <div class="rounded-circle bg-light d-inline-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-search fa-2x text-primary"></i>
+                            </div>
+                            <h5>Find Restaurants</h5>
+                            <p class="small text-muted">Browse restaurants or search for your favorite food</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <div class="rounded-circle bg-light d-inline-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-utensils fa-2x text-primary"></i>
+                            </div>
+                            <h5>Choose Meals</h5>
+                            <p class="small text-muted">Select your favorite dishes and add them to cart</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="rounded-circle bg-light d-inline-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-truck fa-2x text-primary"></i>
+                            </div>
+                            <h5>Fast Delivery</h5>
+                            <p class="small text-muted">Get your food delivered to your doorstep</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 d-none d-md-block">
+                    <img src="{{ url_for('static', filename='img/default-food.jpg') }}" alt="How it works" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Food Item Quick View Modals -->
+<!-- Modal for Butter Chicken -->
+<div class="modal fade" id="dishModal1" tabindex="-1" aria-labelledby="dishModalLabel1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dishModalLabel1">Butter Chicken</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="modal-dish-image-container rounded">
+                            <div class="dish-image-placeholder indian"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Butter Chicken <span class="badge bg-success">Bestseller</span></h4>
+                        <p class="text-muted">Spice Garden</p>
+                        <div class="d-flex mb-3">
+                            <span class="me-2"><i class="fas fa-star text-warning"></i> 4.8</span>
+                            <span class="text-muted">(124 ratings)</span>
+                        </div>
+                        <p>Tender chicken pieces cooked in a rich and creamy tomato-based sauce with butter and aromatic spices.</p>
+                        <h5 class="mb-3">$14.99</h5>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="input-group me-3" style="width: 120px;">
+                                <button class="btn btn-outline-secondary" type="button" onclick="decrementQuantity(this)"><i class="fas fa-minus"></i></button>
+                                <input type="text" class="form-control text-center quantity-input" value="1" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="incrementQuantity(this)"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <button class="btn btn-primary add-to-cart-modal" data-item-id="item-001">
+                                <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-light text-dark me-2"><i class="fas fa-pepper-hot text-danger me-1"></i> Spicy</span>
+                            <span class="badge bg-light text-dark me-2"><i class="fas fa-drumstick-bite text-dark me-1"></i> Non-Veg</span>
+                            <span class="badge bg-light text-dark"><i class="fas fa-clock text-primary me-1"></i> 30-40 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{{ url_for('restaurant_detail', restaurant_id='rest-001') }}" class="btn btn-primary">View Restaurant</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Bliss Burger -->
+<div class="modal fade" id="dishModal2" tabindex="-1" aria-labelledby="dishModalLabel2" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dishModalLabel2">Bliss Burger</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="modal-dish-image-container rounded">
+                            <div class="dish-image-placeholder burger"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Bliss Burger <span class="badge bg-danger">Hot</span></h4>
+                        <p class="text-muted">Burger Bliss</p>
+                        <div class="d-flex mb-3">
+                            <span class="me-2"><i class="fas fa-star text-warning"></i> 4.7</span>
+                            <span class="text-muted">(98 ratings)</span>
+                        </div>
+                        <p>Our signature burger with Angus beef, caramelized onions, blue cheese, arugula, and truffle aioli on a toasted brioche bun.</p>
+                        <h5 class="mb-3">$13.99</h5>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="input-group me-3" style="width: 120px;">
+                                <button class="btn btn-outline-secondary" type="button" onclick="decrementQuantity(this)"><i class="fas fa-minus"></i></button>
+                                <input type="text" class="form-control text-center quantity-input" value="1" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="incrementQuantity(this)"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <button class="btn btn-primary add-to-cart-modal" data-item-id="item-007">
+                                <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-light text-dark me-2"><i class="fas fa-hamburger text-dark me-1"></i> Beef</span>
+                            <span class="badge bg-light text-dark me-2"><i class="fas fa-cheese text-warning me-1"></i> Contains Dairy</span>
+                            <span class="badge bg-light text-dark"><i class="fas fa-clock text-primary me-1"></i> 20-30 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{{ url_for('restaurant_detail', restaurant_id='rest-002') }}" class="btn btn-primary">View Restaurant</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Margherita Pizza -->
+<div class="modal fade" id="dishModal3" tabindex="-1" aria-labelledby="dishModalLabel3" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dishModalLabel3">Margherita Pizza</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="modal-dish-image-container rounded">
+                            <div class="dish-image-placeholder pizza"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Margherita Pizza <span class="badge bg-info text-dark">Veg</span></h4>
+                        <p class="text-muted">Pasta Paradise</p>
+                        <div class="d-flex mb-3">
+                            <span class="me-2"><i class="fas fa-star text-warning"></i> 4.6</span>
+                            <span class="text-muted">(112 ratings)</span>
+                        </div>
+                        <p>Traditional pizza with tomato sauce, fresh mozzarella, basil, and extra virgin olive oil.</p>
+                        <h5 class="mb-3">$12.99</h5>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="input-group me-3" style="width: 120px;">
+                                <button class="btn btn-outline-secondary" type="button" onclick="decrementQuantity(this)"><i class="fas fa-minus"></i></button>
+                                <input type="text" class="form-control text-center quantity-input" value="1" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="incrementQuantity(this)"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <button class="btn btn-primary add-to-cart-modal" data-item-id="item-013">
+                                <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-light text-dark me-2"><i class="fas fa-leaf text-success me-1"></i> Vegetarian</span>
+                            <span class="badge bg-light text-dark me-2"><i class="fas fa-cheese text-warning me-1"></i> Contains Dairy</span>
+                            <span class="badge bg-light text-dark"><i class="fas fa-clock text-primary me-1"></i> 25-35 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{{ url_for('restaurant_detail', restaurant_id='rest-003') }}" class="btn btn-primary">View Restaurant</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for California Roll -->
+<div class="modal fade" id="dishModal4" tabindex="-1" aria-labelledby="dishModalLabel4" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dishModalLabel4">California Roll</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="modal-dish-image-container rounded">
+                            <div class="dish-image-placeholder sushi"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>California Roll <span class="badge bg-primary">Popular</span></h4>
+                        <p class="text-muted">Sushi Sensation</p>
+                        <div class="d-flex mb-3">
+                            <span class="me-2"><i class="fas fa-star text-warning"></i> 4.5</span>
+                            <span class="text-muted">(87 ratings)</span>
+                        </div>
+                        <p>Crab, avocado, and cucumber roll topped with tobiko. 8 pieces per order.</p>
+                        <h5 class="mb-3">$8.99</h5>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="input-group me-3" style="width: 120px;">
+                                <button class="btn btn-outline-secondary" type="button" onclick="decrementQuantity(this)"><i class="fas fa-minus"></i></button>
+                                <input type="text" class="form-control text-center quantity-input" value="1" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="incrementQuantity(this)"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <button class="btn btn-primary add-to-cart-modal" data-item-id="item-016">
+                                <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-light text-dark me-2"><i class="fas fa-fish text-info me-1"></i> Seafood</span>
+                            <span class="badge bg-light text-dark me-2"><i class="fas fa-seedling text-success me-1"></i> Gluten-Free</span>
+                            <span class="badge bg-light text-dark"><i class="fas fa-clock text-primary me-1"></i> 15-25 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{{ url_for('restaurant_detail', restaurant_id='rest-004') }}" class="btn btn-primary">View Restaurant</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add to Cart Success Toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <i class="fas fa-check-circle me-2"></i>
+            <strong class="me-auto">Success</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Item added to your cart successfully!
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function incrementQuantity(btn) {
+        const input = btn.parentNode.querySelector('.quantity-input');
+        const currentValue = parseInt(input.value);
+        if (currentValue < 10) {
+            input.value = currentValue + 1;
+        }
+    }
+
+    function decrementQuantity(btn) {
+        const input = btn.parentNode.querySelector('.quantity-input');
+        const currentValue = parseInt(input.value);
+        if (currentValue > 1) {
+            input.value = currentValue - 1;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add to cart functionality
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn, .add-to-cart-modal');
+        const cartToast = document.getElementById('cartToast');
+        const bsCartToast = cartToast ? new bootstrap.Toast(cartToast) : null;
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Only prevent default for buttons that aren't in forms
+                if (!this.closest('form')) {
+                    e.preventDefault();
+                }
+
+                // In a real app, this would make an AJAX call to add the item to cart
+                // For demo purposes, we'll just show the toast
+                if (bsCartToast) {
+                    bsCartToast.show();
+                }
+
+                // Change button appearance temporarily
+                const originalHTML = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check me-1"></i>Added';
+                this.classList.add('btn-success');
+                this.classList.remove('btn-primary', 'btn-outline-primary');
+                this.disabled = true;
+
+                // Reset button after 1 second
+                setTimeout(() => {
+                    this.innerHTML = originalHTML;
+                    this.classList.remove('btn-success');
+                    if (this.classList.contains('add-to-cart-btn')) {
+                        this.classList.add('btn-primary');
+                    } else {
+                        this.classList.add('btn-outline-primary');
+                    }
+                    this.disabled = false;
+
+                    // Submit the form if this is a form button
+                    if (this.closest('form') && !this.classList.contains('add-to-cart-modal')) {
+                        this.closest('form').submit();
+                    }
+                }, 1000);
+            });
+        });
+
+        // Quick view button hover effect
+        const quickViewBtns = document.querySelectorAll('.quick-view-btn');
+
+        quickViewBtns.forEach(btn => {
+            btn.style.opacity = '0';
+            btn.style.transition = 'opacity 0.3s ease';
+
+            const container = btn.closest('.position-relative');
+            if (container) {
+                container.addEventListener('mouseenter', function() {
+                    btn.style.opacity = '1';
+                });
+
+                container.addEventListener('mouseleave', function() {
+                    btn.style.opacity = '0';
+                });
+            }
+        });
+
+        // Animation for elements when they come into view
+        const animateElements = document.querySelectorAll('.animate-on-scroll');
+
+        if (animateElements.length > 0 && 'IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate__animated');
+                        entry.target.classList.add(entry.target.dataset.animation || 'animate__fadeIn');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+        } else {
+            // Fallback for browsers that don't support IntersectionObserver
+            animateElements.forEach(element => {
+                element.classList.add('animate__animated');
+                element.classList.add(element.dataset.animation || 'animate__fadeIn');
+            });
+        }
+    });
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 100px 0;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+    .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .section-title {
+        position: relative;
+        padding-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: #ff5a5f;
+    }
+
+    .restaurant-image-container {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .restaurant-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .restaurant-card:hover .restaurant-image {
+        transform: scale(1.05);
+    }
+
+    .restaurant-badge {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .cuisine-card {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .cuisine-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .cuisine-icon {
+        font-size: 2.5rem;
+        color: #ff5a5f;
+        margin-bottom: 10px;
+    }
+
+    .app-badge {
+        height: 40px;
+        transition: transform 0.3s;
+    }
+
+    .app-badge:hover {
+        transform: scale(1.05);
+    }
+
+    .dish-image-container {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .modal-dish-image-container {
+        height: 300px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .dish-image-placeholder {
+        width: 100%;
+        height: 100%;
+        background-color: #f8f9fa;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.5s ease;
+        position: relative;
+    }
+
+    .dish-image-placeholder.indian {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://images.unsplash.com/photo-1585937421612-70a008356cf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');
+    }
+
+    .dish-image-placeholder.burger {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');
+    }
+
+    .dish-image-placeholder.pizza {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');
+    }
+
+    .dish-image-placeholder.sushi {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');
+    }
+
+    .dish-card {
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .dish-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .dish-card:hover .dish-image-placeholder {
+        transform: scale(1.05);
+    }
+
+    /* Ensure images load properly */
+    .dish-image-container, .modal-dish-image-container {
+        background-color: #f8f9fa;
+    }
+
+    /* Animation delays for staggered appearance */
+    .animate-on-scroll[data-delay="100"] {
+        animation-delay: 0.1s;
+    }
+
+    .animate-on-scroll[data-delay="200"] {
+        animation-delay: 0.2s;
+    }
+
+    .animate-on-scroll[data-delay="300"] {
+        animation-delay: 0.3s;
+    }
+
+    .quick-view-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        z-index: 2;
+    }
+
+    .quick-view-btn:hover {
+        background-color: #ff5a5f;
+        color: white;
+    }
+
+    .modal-content {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .modal-footer {
+        border-top: 1px solid rgba(0,0,0,0.05);
+    }
+</style>
+{% endblock %}

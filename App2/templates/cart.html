@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Cart - FoodExpress{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h2 class="h5 mb-0">Your Cart</h2>
+            </div>
+            <div class="card-body">
+                {% if cart_items %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart_items %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-3" style="width: 60px; height: 60px; overflow: hidden; border-radius: 8px;">
+                                                    {% if item.item_id == 'item-001' %}
+                                                        <img src="{{ url_for('static', filename='uploads/food/butter_chicken.jpg') }}" alt="{{ item.name }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ url_for('static', filename='img/default-food.jpg') }}'">
+                                                    {% elif item.item_id == 'item-007' %}
+                                                        <img src="{{ url_for('static', filename='uploads/food/bliss_burger.jpg') }}" alt="{{ item.name }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ url_for('static', filename='img/default-food.jpg') }}'">
+                                                    {% elif item.item_id == 'item-013' %}
+                                                        <img src="{{ url_for('static', filename='uploads/food/margherita_pizza.jpg') }}" alt="{{ item.name }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ url_for('static', filename='img/default-food.jpg') }}'">
+                                                    {% elif item.item_id == 'item-016' %}
+                                                        <img src="{{ url_for('static', filename='uploads/food/california_roll.jpg') }}" alt="{{ item.name }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ url_for('static', filename='img/default-food.jpg') }}'">
+                                                    {% else %}
+                                                        <img src="{{ url_for('static', filename='img/default-food.jpg') }}" alt="{{ item.name }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+                                                    {% endif %}
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">{{ item.name }}</h6>
+                                                    <small class="text-muted">{{ item.restaurant_name }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>${{ item.price }}</td>
+                                        <td>
+                                            <form action="{{ url_for('update_cart') }}" method="post" class="d-flex align-items-center quantity-form">
+                                                <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                                                <div class="input-group input-group-sm" style="width: 100px;">
+                                                    <button class="btn btn-outline-secondary quantity-btn" type="button" onclick="decrementCartQuantity(this)">-</button>
+                                                    <input type="number" name="quantity" class="form-control text-center quantity-input" value="{{ item.quantity }}" min="1" max="10">
+                                                    <button class="btn btn-outline-secondary quantity-btn" type="button" onclick="incrementCartQuantity(this)">+</button>
+                                                </div>
+                                                <button type="submit" class="btn btn-sm btn-outline-primary ms-2 update-btn">
+                                                    <i class="fas fa-sync-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td>${{ item.item_total }}</td>
+                                        <td>
+                                            <form action="{{ url_for('update_cart') }}" method="post">
+                                                <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                                                <input type="hidden" name="quantity" value="0">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <div class="empty-cart-icon mb-4">
+                            <i class="fas fa-shopping-cart fa-4x text-muted"></i>
+                            <i class="fas fa-times fa-2x text-danger position-absolute" style="top: 0; right: 0;"></i>
+                        </div>
+                        <h4 class="mb-3">Your cart is empty</h4>
+                        <p class="text-muted mb-4">Looks like you haven't added any items to your cart yet.</p>
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="card bg-light border-0 mb-4">
+                                    <div class="card-body">
+                                        <h6 class="mb-3"><i class="fas fa-lightbulb text-warning me-2"></i>Suggestions for you</h6>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <ul class="list-unstyled mb-0">
+                                                    <li class="mb-2"><i class="fas fa-utensils text-primary me-2"></i>Browse popular restaurants</li>
+                                                    <li><i class="fas fa-search text-primary me-2"></i>Search for your favorite food</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-6">
+                                                <ul class="list-unstyled mb-0">
+                                                    <li class="mb-2"><i class="fas fa-star text-primary me-2"></i>Check out featured items</li>
+                                                    <li><i class="fas fa-tag text-primary me-2"></i>Look for special offers</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-utensils me-2"></i>Browse Restaurants
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h2 class="h5 mb-0">Order Summary</h2>
+            </div>
+            <div class="card-body">
+                {% if cart_items %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>${{ total }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Delivery Fee</span>
+                        <span>$2.99</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tax</span>
+                        <span>${{ (total * 0.08)|round(2) }}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <strong>Total</strong>
+                        <strong>${{ (total + 2.99 + (total * 0.08))|round(2) }}</strong>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <a href="{{ url_for('checkout') }}" class="btn btn-primary btn-lg">Proceed to Checkout</a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-muted mb-0">Add items to see order summary</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if cart_items %}
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Have a promo code?</h5>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Enter code">
+                        <button class="btn btn-outline-secondary" type="button">Apply</button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function incrementCartQuantity(btn) {
+        const input = btn.parentNode.querySelector('.quantity-input');
+        const currentValue = parseInt(input.value);
+        if (currentValue < 10) {
+            input.value = currentValue + 1;
+        }
+    }
+    
+    function decrementCartQuantity(btn) {
+        const input = btn.parentNode.querySelector('.quantity-input');
+        const currentValue = parseInt(input.value);
+        if (currentValue > 1) {
+            input.value = currentValue - 1;
+        }
+    }
+</script>
+{% endblock %}

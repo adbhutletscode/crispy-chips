@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results - FoodExpress{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="section-title">Search Results for "{{ query }}"</h1>
+    <p class="text-muted">Found {{ restaurants|length }} restaurants</p>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Filters</h5>
+                
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-2">Cuisines</h6>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input filter-btn" type="radio" name="cuisine" id="all" data-filter="all" checked>
+                        <label class="form-check-label" for="all">
+                            All Cuisines
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input filter-btn" type="radio" name="cuisine" id="indian" data-filter="Indian">
+                        <label class="form-check-label" for="indian">
+                            Indian
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input filter-btn" type="radio" name="cuisine" id="italian" data-filter="Italian">
+                        <label class="form-check-label" for="italian">
+                            Italian
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input filter-btn" type="radio" name="cuisine" id="american" data-filter="American">
+                        <label class="form-check-label" for="american">
+                            American
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input filter-btn" type="radio" name="cuisine" id="japanese" data-filter="Japanese">
+                        <label class="form-check-label" for="japanese">
+                            Japanese
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input filter-btn" type="radio" name="cuisine" id="mexican" data-filter="Mexican">
+                        <label class="form-check-label" for="mexican">
+                            Mexican
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-2">Sort By</h6>
+                    <select class="form-select" id="sort-select">
+                        <option value="rating-high">Rating (High to Low)</option>
+                        <option value="rating-low">Rating (Low to High)</option>
+                        <option value="delivery-low">Delivery Fee (Low to High)</option>
+                        <option value="delivery-high">Delivery Fee (High to Low)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <h6 class="fw-bold mb-2">Dietary Preferences</h6>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="vegetarian">
+                        <label class="form-check-label" for="vegetarian">
+                            Vegetarian Options
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="vegan">
+                        <label class="form-check-label" for="vegan">
+                            Vegan Options
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        {% if restaurants %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 restaurants-container">
+                {% for restaurant in restaurants %}
+                    <div class="col restaurant-card" 
+                         data-cuisines="{{ restaurant.cuisines|join(',') }}" 
+                         data-rating="{{ restaurant.rating }}" 
+                         data-delivery-fee="{{ restaurant.delivery_fee }}">
+                        <div class="card h-100 shadow-sm">
+                            <div class="restaurant-image-container">
+                                {% if restaurant.id == 'rest-001' %}
+                                    <img src="{{ url_for('static', filename='uploads/restaurants/spice_garden.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}" onerror="this.src='{{ url_for('static', filename='img/default-restaurant.jpg') }}'">
+                                {% elif restaurant.id == 'rest-002' %}
+                                    <img src="{{ url_for('static', filename='uploads/restaurants/burger_bliss.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}" onerror="this.src='{{ url_for('static', filename='img/default-restaurant.jpg') }}'">
+                                {% elif restaurant.id == 'rest-003' %}
+                                    <img src="{{ url_for('static', filename='uploads/restaurants/pasta_paradise.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}" onerror="this.src='{{ url_for('static', filename='img/default-restaurant.jpg') }}'">
+                                {% elif restaurant.id == 'rest-004' %}
+                                    <img src="{{ url_for('static', filename='uploads/restaurants/sushi_sensation.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}" onerror="this.src='{{ url_for('static', filename='img/default-restaurant.jpg') }}'">
+                                {% elif restaurant.id == 'rest-005' %}
+                                    <img src="{{ url_for('static', filename='uploads/restaurants/taco_fiesta.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}" onerror="this.src='{{ url_for('static', filename='img/default-restaurant.jpg') }}'">
+                                {% elif restaurant.id == 'rest-006' %}
+                                    <img src="{{ url_for('static', filename='uploads/restaurants/green_bowl.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}" onerror="this.src='{{ url_for('static', filename='img/default-restaurant.jpg') }}'">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='img/default-restaurant.jpg') }}" class="card-img-top restaurant-image" alt="{{ restaurant.name }}">
+                                {% endif %}
+                                <div class="restaurant-badge">
+                                    <span class="badge rounded-pill bg-light text-dark shadow-sm">
+                                        <i class="fas fa-clock text-primary me-1"></i> 30-45 min
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h5 class="card-title">{{ restaurant.name }}</h5>
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-star"></i> {{ restaurant.rating|default('New') }}
+                                    </span>
+                                </div>
+                                <p class="card-text text-muted small mb-2">
+                                    <i class="fas fa-utensils me-1"></i> {{ restaurant.cuisines|join(', ') }}
+                                </p>
+                                <p class="card-text small mb-3">{{ restaurant.description|truncate(80) }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-muted small">
+                                        <i class="fas fa-motorcycle me-1"></i> Delivery fee: ${{ restaurant.delivery_fee }}
+                                    </span>
+                                    <span class="text-muted small">
+                                        <i class="fas fa-shopping-basket me-1"></i> Min: ${{ restaurant.min_order }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white border-top-0">
+                                <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.id) }}" class="btn btn-outline-primary w-100">View Menu</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <p class="mb-0">No restaurants found matching "{{ query }}". Try a different search term.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('change', function() {
+                const filter = this.dataset.filter;
+                const restaurants = document.querySelectorAll('.restaurant-card');
+                
+                if (filter === 'all') {
+                    restaurants.forEach(restaurant => {
+                        restaurant.style.display = 'block';
+                    });
+                } else {
+                    restaurants.forEach(restaurant => {
+                        const cuisines = restaurant.dataset.cuisines.split(',');
+                        if (cuisines.includes(filter)) {
+                            restaurant.style.display = 'block';
+                        } else {
+                            restaurant.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Sort functionality
+        const sortSelect = document.getElementById('sort-select');
+        
+        sortSelect.addEventListener('change', function() {
+            const sortBy = this.value;
+            const restaurantsContainer = document.querySelector('.restaurants-container');
+            const restaurants = Array.from(document.querySelectorAll('.restaurant-card'));
+            
+            // Sort restaurants based on selected option
+            restaurants.sort((a, b) => {
+                if (sortBy === 'rating-high') {
+                    return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+                } else if (sortBy === 'rating-low') {
+                    return parseFloat(a.dataset.rating) - parseFloat(b.dataset.rating);
+                } else if (sortBy === 'delivery-low') {
+                    return parseFloat(a.dataset.deliveryFee) - parseFloat(b.dataset.deliveryFee);
+                } else if (sortBy === 'delivery-high') {
+                    return parseFloat(b.dataset.deliveryFee) - parseFloat(a.dataset.deliveryFee);
+                }
+            });
+            
+            // Re-append sorted restaurants
+            restaurants.forEach(restaurant => {
+                restaurantsContainer.appendChild(restaurant);
+            });
+        });
+    });
+</script>
+{% endblock %}

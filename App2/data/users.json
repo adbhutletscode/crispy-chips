@@ -1,0 +1,11 @@
+[
+    {
+        "id": "admin-user-id",
+        "name": "Admin User",
+        "email": "admin@fooddelivery.com",
+        "password": "pbkdf2:sha256:150000$aBcDeFgH$1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+        "is_admin": true,
+        "is_restaurant": false,
+        "created_at": "2023-01-01T00:00:00"
+    }
+]
